@@ -7,14 +7,20 @@ const {
   updateContact,
 } = require("../../controllers/contactsControllers");
 
+const { validateBody, isValidId } = require("../../middlewares");
+const { joiSchemas } = require("../../schemas");
+
 const router = express.Router();
 
-router.route("/").get(listContacts).post(addContact);
+router
+  .route("/")
+  .get(listContacts)
+  .post(validateBody(joiSchemas.contactSchema), addContact);
 
 router
   .route("/:contactId")
-  .get(getContactById)
-  .delete(removeContact)
-  .put(updateContact);
+  .get(isValidId, getContactById)
+  .delete(isValidId, removeContact)
+  .put(isValidId, validateBody(joiSchemas.contactSchema), updateContact);
 
 module.exports = router;

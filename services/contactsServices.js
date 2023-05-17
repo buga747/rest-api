@@ -4,7 +4,6 @@ const crypto = require("crypto");
 
 const { HttpError } = require("../utils/HttpError");
 const { writeFile } = require("../utils/writeFile");
-const { contactSchema } = require("../schema/constactSchema");
 
 const contactsPath = path.join(__dirname, "..", "/models", "contacts.json");
 
@@ -34,10 +33,10 @@ const removeContactService = async (contactId) => {
 };
 
 const addContactService = async (body) => {
-  const { error } = contactSchema.validate(body);
-  if (error) {
-    throw new HttpError(400, "missing required name field");
-  }
+  // const { error } = JoiContactSchema.validate(body);
+  // if (error) {
+  //   throw new HttpError(400, "missing required name field");
+  // }
 
   const contacts = await listContactsService();
   const newContact = { id: crypto.randomUUID(), ...body };
@@ -50,11 +49,11 @@ const addContactService = async (body) => {
 const updateContactService = async (contactId, body) => {
   const contacts = await listContactsService();
 
-  const { error } = contactSchema.validate(body);
+  // const { error } = JoiContactSchema.validate(body);
 
-  if (error) {
-    throw new HttpError(400, "missing fields");
-  }
+  // if (error) {
+  //   throw new HttpError(400, "missing fields");
+  // }
 
   const index = contacts.findIndex((contact) => contact.id === contactId);
   if (index === -1) {
