@@ -19,7 +19,7 @@ app.use((req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  res.status(error.statusCode || 500).json({
+  res.status(error.status || 500).json({
     message: error.message || "Something went wrong. Please, try again later",
   });
 });
