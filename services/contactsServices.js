@@ -5,7 +5,7 @@ function getContactsService() {
 }
 
 const getContactService = (contactId) => {
-  return Contact.findOne({ _id: contactId });
+  return Contact.findById(contactId);
 };
 
 const addContactService = (newContact) => {
@@ -13,13 +13,15 @@ const addContactService = (newContact) => {
 };
 
 const updateContactService = (contactId, updatedContact) => {
-  return Contact.findOneAndUpdate({ _id: contactId }, updatedContact, {
+  return Contact.findByIdAndUpdate(contactId, updatedContact, {
     new: true,
   });
 };
 
 const updateStatusContactService = (contactId, field) => {
-  return Contact.findOneAndUpdate({ _id: contactId }, field, { new: true });
+  return Contact.findByIdAndUpdate(contactId, field, {
+    new: true,
+  });
 };
 
 const removeContactService = (contactId) => {

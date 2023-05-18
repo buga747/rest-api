@@ -1,5 +1,5 @@
 const {
-  listContactsService,
+  getContactsService,
   getContactService,
   removeContactService,
   addContactService,
@@ -8,10 +8,10 @@ const {
 } = require("../services/contactsServices");
 
 const { ctrlWrapper } = require("../utils/decorators");
-const { HttpError } = require("../utils/errors");
+const HttpError = require("../utils/errors");
 
 const getContacts = async (req, res) => {
-  const contacts = await listContactsService();
+  const contacts = await getContactsService();
 
   if (!contacts) {
     throw new HttpError(404, "Not found");
