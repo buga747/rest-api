@@ -18,8 +18,8 @@ const updateContactService = (contactId, updatedContact) => {
   });
 };
 
-const updateStatusContactService = (contactId, field) => {
-  return Contact.findByIdAndUpdate(contactId, field, {
+const updateStatusContactService = (contactId, newStatus) => {
+  return Contact.findByIdAndUpdate(contactId, newStatus, {
     new: true,
   });
 };

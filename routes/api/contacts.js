@@ -9,7 +9,7 @@ const {
 } = require("../../controllers");
 
 const { validateBody, isValidId } = require("../../middlewares");
-const { joiSchemas } = require("../../utils/schemas");
+const joiSchemas = require("../../utils/schemas");
 
 const router = express.Router();
 

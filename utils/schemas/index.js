@@ -1,2 +1,2 @@
 const joiSchemas = require("./joiContactSchemas");
-module.exports = { joiSchemas };
+module.exports = joiSchemas;
