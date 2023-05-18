@@ -5,13 +5,15 @@ const contact = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Set name for contact"],
     },
     email: {
       type: String,
+      match: /^\S+@\S+\.\S+$/,
+      unique: true,
     },
     phone: {
       type: String,
+      match: /^\(\d{3}\) \d{3}-\d{4}$/,
     },
     favorite: {
       type: Boolean,
