@@ -12,4 +12,10 @@ router.post(
   authControllers.register
 );
 
+router.post(
+  "/login",
+  validateBody(authValidationSchemas.loginValidationSchema),
+  authControllers.login
+);
+
 module.exports = { authRouter: router };
