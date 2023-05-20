@@ -11,7 +11,8 @@ const { ctrlWrapper } = require("../utils/decorators");
 const HttpError = require("../utils/errors");
 
 const getContacts = async (req, res) => {
-  const contacts = await getContactsService();
+  const { page = 1, limit = 20, favorite } = req.query;
+  const contacts = await getContactsService(page, limit, favorite);
 
   if (!contacts) {
     throw new HttpError(404, "Not found");

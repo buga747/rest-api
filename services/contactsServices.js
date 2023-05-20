@@ -1,7 +1,15 @@
 const Contact = require("../models/contact");
 
-function getContactsService() {
-  return Contact.find();
+function getContactsService(page, limit, favorite) {
+  const skip = (page - 1) * limit;
+  const filter = {};
+  if (favorite === "true") {
+    filter.favorite = true;
+  } else if (favorite === "false") {
+    filter.favorite = false;
+  }
+
+  return Contact.find(filter).skip(skip).limit(limit);
 }
 
 const getContactService = (contactId) => {
