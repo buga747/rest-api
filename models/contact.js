@@ -9,7 +9,6 @@ const contact = new Schema(
     email: {
       type: String,
       match: /^\S+@\S+\.\S+$/,
-      unique: true,
     },
     phone: {
       type: String,

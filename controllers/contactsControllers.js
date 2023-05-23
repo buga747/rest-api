@@ -12,7 +12,7 @@ const HttpError = require("../utils/errors");
 
 const getContacts = async (req, res) => {
   const { page = 1, limit = 20, favorite } = req.query;
-  const contacts = await getContactsService(page, limit, favorite);
+  const contacts = await getContactsService(req.user, page, limit, favorite);
 
   if (!contacts) {
     throw new HttpError(404, "Not found");
@@ -32,8 +32,7 @@ const getContact = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const newContact = await addContactService(req.body);
-
+  const newContact = await addContactService(req.body, req.user);
   if (!newContact) {
     throw new HttpError(404, "Not found");
   }
