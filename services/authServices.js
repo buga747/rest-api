@@ -35,10 +35,21 @@ const loginService = async (body) => {
   return { user, token };
 };
 
-const logoutService = () => {};
+const logoutService = (user) => {
+  const { _id } = user;
+  return User.findByIdAndUpdate(_id, { token: null });
+};
+
+const updateSubscriptionService = (req) => {
+  const user = req.user;
+  const { subscription } = req.body;
+
+  return User.findByIdAndUpdate(user._id, { subscription }, { new: true });
+};
 
 module.exports = {
   registerService,
   loginService,
   logoutService,
+  updateSubscriptionService,
 };

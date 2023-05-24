@@ -15,9 +15,19 @@ const loginValidationSchema = Joi.object().keys({
   password: createUserValidationSchema.extract("password"),
 });
 
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.boolean()
+    .valid("starter", "pro", "business")
+    .required()
+    .messages({
+      "any.required": "Favorite is a required field",
+    }),
+});
+
 const authValidationSchemas = {
   createUserValidationSchema,
   loginValidationSchema,
+  updateSubscriptionSchema,
 };
 
 module.exports = authValidationSchemas;
