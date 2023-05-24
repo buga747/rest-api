@@ -21,8 +21,9 @@ const getContactService = (contactId) => {
   return Contact.findById(contactId);
 };
 
-const addContactService = async (newContact, user) => {
-  const { _id: owner } = user;
+const addContactService = async (req) => {
+  const { _id: owner } = req.user;
+  const newContact = req.body;
 
   const existingEmailInUserContacts = await Contact.findOne({
     email: newContact.email,

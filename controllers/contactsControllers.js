@@ -32,7 +32,7 @@ const getContact = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const newContact = await addContactService(req.body, req.user);
+  const newContact = await addContactService(req);
   if (!newContact) {
     throw new HttpError(404, "Not found");
   }
