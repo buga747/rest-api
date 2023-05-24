@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const contactSchema = Joi.object({
+const createContactValidationSchema = Joi.object({
   name: Joi.string().min(2).max(30).required(),
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
   phone: Joi.string()
@@ -9,10 +9,13 @@ const contactSchema = Joi.object({
   favorite: Joi.boolean(),
 });
 
-const updateFavoriteSchema = Joi.object({
+const updateFavoriteContactSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
-const joiSchemas = { contactSchema, updateFavoriteSchema };
+const joiContactValidationSchemas = {
+  createContactValidationSchema,
+  updateFavoriteContactSchema,
+};
 
-module.exports = joiSchemas;
+module.exports = joiContactValidationSchemas;

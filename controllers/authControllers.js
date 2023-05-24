@@ -1,0 +1,57 @@
+const { ctrlWrapper } = require("../utils/decorators");
+const {
+  registerService,
+  loginService,
+  logoutService,
+  updateSubscriptionService,
+} = require("../services/authServices");
+
+const register = ctrlWrapper(async (req, res, next) => {
+  const newUser = await registerService(req.body);
+  res.status(201).json({
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
+  });
+});
+
+const login = ctrlWrapper(async (req, res, next) => {
+  const { user, token } = await loginService(req.body);
+  res.status(200).json({
+    token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
+  });
+});
+
+const logout = ctrlWrapper(async (req, res, next) => {
+  await logoutService(req.user);
+  res.status(204).json();
+});
+
+const getCurrent = ctrlWrapper(async (req, res, next) => {
+  const { email, subscription } = req.user;
+  res.json({ email, subscription });
+});
+
+const updateSubscription = ctrlWrapper(async (req, res, next) => {
+  const updatedUser = await updateSubscriptionService(req);
+
+  res.status(201).json({
+    user: {
+      email: updatedUser.email,
+      subscription: updatedUser.subscription,
+    },
+  });
+});
+
+module.exports = {
+  register,
+  login,
+  logout,
+  getCurrent,
+  updateSubscription,
+};
