@@ -1,7 +1,7 @@
 const express = require("express");
 const authControllers = require("../../controllers/authControllers");
 
-const { validateBody, authenticate } = require("../../middlewares");
+const { validateBody, authenticate, upload } = require("../../middlewares");
 const { authValidationSchemas } = require("../../utils/validationSchemas");
 
 const router = express.Router();
@@ -21,6 +21,13 @@ router.post(
 router.post("/logout", authenticate, authControllers.logout);
 
 router.get("/current", authenticate, authControllers.getCurrent);
+
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  authControllers.updateAvatar
+);
 
 router.patch(
   "/",

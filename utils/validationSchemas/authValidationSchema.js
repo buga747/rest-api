@@ -5,7 +5,7 @@ const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 const createUserValidationSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().pattern(passwordPattern).required().messages({
-    "sting.pattern.base":
+    "string.pattern.base":
       "Password should contain minimum eight characters, at least one letter and one number",
   }),
 });
