@@ -56,12 +56,13 @@ const updateSubscriptionService = (req) => {
 const updateAvatarService = async (userId, file) => {
   const { path: tempUpload, originalname } = file;
   const extension = originalname.split(".").pop();
-  const filename = `${userId}.${extension}`;
-  const uploadFullPath = path.join(avatarDir, filename);
 
   const image = await Jimp.read(`temp/${originalname}`);
   image.resize(250, 250);
   image.writeAsync(`temp/${originalname}`);
+
+  const filename = `${userId}.${extension}`;
+  const uploadFullPath = path.join(avatarDir, filename);
 
   fs.rename(tempUpload, uploadFullPath);
   const avatarURL = path.join("avatars", filename);
