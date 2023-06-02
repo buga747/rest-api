@@ -59,7 +59,7 @@ const updateAvatarService = async (userId, file) => {
 
   const image = await Jimp.read(`temp/${originalname}`);
   image.resize(250, 250);
-  image.writeAsync(`temp/${originalname}`);
+  // image.writeAsync(`temp/${originalname}`);
 
   const filename = `${userId}.${extension}`;
   const uploadFullPath = path.join(avatarDir, filename);
