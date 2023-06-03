@@ -4,6 +4,7 @@ const {
   loginService,
   logoutService,
   updateSubscriptionService,
+  updateAvatarService,
 } = require("../services/authServices");
 
 const register = ctrlWrapper(async (req, res, next) => {
@@ -12,6 +13,7 @@ const register = ctrlWrapper(async (req, res, next) => {
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 });
@@ -48,10 +50,21 @@ const updateSubscription = ctrlWrapper(async (req, res, next) => {
   });
 });
 
+const updateAvatar = ctrlWrapper(async (req, res, next) => {
+  const { id } = req.user;
+
+  const updatedUser = await updateAvatarService(id, req.file);
+
+  res.status(200).json({
+    avatarURL: updatedUser.avatarURL,
+  });
+});
+
 module.exports = {
   register,
   login,
   logout,
   getCurrent,
   updateSubscription,
+  updateAvatar,
 };
