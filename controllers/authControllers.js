@@ -65,7 +65,7 @@ const updateAvatar = ctrlWrapper(async (req, res, next) => {
 const verifyEmail = ctrlWrapper(async (req, res, next) => {
   const { verificationToken } = req.params;
 
-  verifyEmailService(verificationToken);
+  await verifyEmailService(verificationToken);
 
   res.status(200).json({ message: "Verification successful" });
 });

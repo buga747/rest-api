@@ -92,16 +92,21 @@ const updateAvatarService = async (userId, file) => {
   return User.findByIdAndUpdate(userId, { avatarURL }, { new: true });
 };
 
-const verifyEmailService = (token) => {
-  const user = User.findOne({ token });
+const verifyEmailService = async (token) => {
+  const user = await User.findOne({ verificationToken: token });
+
   if (!user) {
     throw new HttpError(404, "User not found");
   }
 
-  User.findByIdAndUpdate(user._id, {
-    verify: true,
-    verificationToken: "",
-  });
+  return User.findByIdAndUpdate(
+    user._id,
+    {
+      verify: true,
+      verificationToken: null,
+    },
+    { new: true }
+  );
 };
 
 module.exports = {
