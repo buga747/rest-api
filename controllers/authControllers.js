@@ -5,6 +5,7 @@ const {
   logoutService,
   updateSubscriptionService,
   updateAvatarService,
+  verifyEmailService,
 } = require("../services/authServices");
 
 const register = ctrlWrapper(async (req, res, next) => {
@@ -14,6 +15,7 @@ const register = ctrlWrapper(async (req, res, next) => {
       email: newUser.email,
       subscription: newUser.subscription,
       avatarURL: newUser.avatarURL,
+      verificationToken: newUser.verificationToken,
     },
   });
 });
@@ -60,6 +62,14 @@ const updateAvatar = ctrlWrapper(async (req, res, next) => {
   });
 });
 
+const verifyEmail = ctrlWrapper(async (req, res, next) => {
+  const { verificationToken } = req.params;
+
+  verifyEmailService(verificationToken);
+
+  res.status(200).json({ message: "Verification successful" });
+});
+
 module.exports = {
   register,
   login,
@@ -67,4 +77,5 @@ module.exports = {
   getCurrent,
   updateSubscription,
   updateAvatar,
+  verifyEmail,
 };

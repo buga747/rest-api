@@ -36,4 +36,6 @@ router.patch(
   authControllers.updateSubscription
 );
 
+router.get("/auth/verify/:verificationToken", authControllers.verifyEmail);
+
 module.exports = { authRouter: router };
