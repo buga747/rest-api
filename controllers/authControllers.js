@@ -6,6 +6,7 @@ const {
   updateSubscriptionService,
   updateAvatarService,
   verifyEmailService,
+  resentVerifyEmailService,
 } = require("../services/authServices");
 
 const register = ctrlWrapper(async (req, res, next) => {
@@ -70,6 +71,14 @@ const verifyEmail = ctrlWrapper(async (req, res, next) => {
   res.status(200).json({ message: "Verification successful" });
 });
 
+const resentVerifyEmail = ctrlWrapper(async (req, res, next) => {
+  const { email } = req.body;
+
+  await resentVerifyEmailService(email);
+
+  res.status(200).json({ message: "Verification email sent" });
+});
+
 module.exports = {
   register,
   login,
@@ -78,4 +87,5 @@ module.exports = {
   updateSubscription,
   updateAvatar,
   verifyEmail,
+  resentVerifyEmail,
 };

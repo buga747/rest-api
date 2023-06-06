@@ -38,4 +38,10 @@ router.patch(
 
 router.get("/auth/verify/:verificationToken", authControllers.verifyEmail);
 
+router.post(
+  "/verify",
+  validateBody(authValidationSchemas.verifyEmailSchema),
+  authControllers.resentVerifyEmail
+);
+
 module.exports = { authRouter: router };

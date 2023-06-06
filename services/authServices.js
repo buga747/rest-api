@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, PROJECT_URL } = process.env;
 
 const path = require("path");
 const fs = require("fs/promises");
@@ -26,7 +26,7 @@ const registerService = async (body) => {
   const verifyEmail = {
     to: body.email,
     subject: "Email verification from Contacts",
-    html: `<strong>Please verify your email by clicking this <a target="_blank" href="http://localhost:3001/users/auth/verify/${verificationToken}">verification link</a></strong>`,
+    html: `<strong>Please verify your email by clicking this <a target="_blank" href="${PROJECT_URL}/users/auth/verify/${verificationToken}">verification link</a></strong>`,
   };
 
   await sendEmail(verifyEmail);
@@ -109,6 +109,26 @@ const verifyEmailService = async (token) => {
   );
 };
 
+const resentVerifyEmailService = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new HttpError(404, "User not found");
+  }
+
+  if (user.verify) {
+    throw new HttpError(400, "Verification has already been passed");
+  }
+
+  const verifyEmail = {
+    to: user.email,
+    subject: "Email verification from Contacts",
+    html: `<strong>Please verify your email by clicking this <a target="_blank" href="${PROJECT_URL}/users/auth/verify/${user.verificationToken}">verification link</a></strong>`,
+  };
+
+  await sendEmail(verifyEmail);
+};
+
 module.exports = {
   registerService,
   loginService,
@@ -116,4 +136,5 @@ module.exports = {
   updateSubscriptionService,
   updateAvatarService,
   verifyEmailService,
+  resentVerifyEmailService,
 };
