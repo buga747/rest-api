@@ -24,10 +24,15 @@ const updateSubscriptionSchema = Joi.object({
     }),
 });
 
+const verifyEmailSchema = Joi.object({
+  email: createUserValidationSchema.extract("email"),
+});
+
 const authValidationSchemas = {
   createUserValidationSchema,
   loginValidationSchema,
   updateSubscriptionSchema,
+  verifyEmailSchema,
 };
 
 module.exports = authValidationSchemas;

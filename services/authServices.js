@@ -1,13 +1,15 @@
 const { HttpError } = require("../utils/errors");
 const { User } = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, PROJECT_URL } = process.env;
 
 const path = require("path");
 const fs = require("fs/promises");
 const Jimp = require("jimp");
+const sendEmail = require("../utils/sendEmail");
 
 const avatarDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -18,13 +20,33 @@ const registerService = async (body) => {
   }
   const avatarURL = gravatar.url(body.email);
   const hasedPassword = await bcrypt.hash(body.password, 12);
-  return await User.create({ ...body, password: hasedPassword, avatarURL });
+
+  const verificationToken = uuidv4();
+
+  const verifyEmail = {
+    to: body.email,
+    subject: "Email verification from Contacts",
+    html: `<strong>Please verify your email by clicking this <a target="_blank" href="${PROJECT_URL}/users/auth/verify/${verificationToken}">verification link</a></strong>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  return await User.create({
+    ...body,
+    password: hasedPassword,
+    avatarURL,
+    verificationToken,
+  });
 };
 
 const loginService = async (body) => {
   const user = await User.findOne({ email: body.email });
   if (!user) {
     throw new HttpError(401, "Email or password is wrong");
+  }
+
+  if (!user.verify) {
+    throw new HttpError(401, "Please verify your email");
   }
 
   const passwordCompare = await bcrypt.compare(body.password, user.password);
@@ -70,10 +92,49 @@ const updateAvatarService = async (userId, file) => {
   return User.findByIdAndUpdate(userId, { avatarURL }, { new: true });
 };
 
+const verifyEmailService = async (token) => {
+  const user = await User.findOne({ verificationToken: token });
+
+  if (!user) {
+    throw new HttpError(404, "User not found");
+  }
+
+  return User.findByIdAndUpdate(
+    user._id,
+    {
+      verify: true,
+      verificationToken: null,
+    },
+    { new: true }
+  );
+};
+
+const resentVerifyEmailService = async (email) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new HttpError(404, "User not found");
+  }
+
+  if (user.verify) {
+    throw new HttpError(400, "Verification has already been passed");
+  }
+
+  const verifyEmail = {
+    to: user.email,
+    subject: "Email verification from Contacts",
+    html: `<strong>Please verify your email by clicking this <a target="_blank" href="${PROJECT_URL}/users/auth/verify/${user.verificationToken}">verification link</a></strong>`,
+  };
+
+  await sendEmail(verifyEmail);
+};
+
 module.exports = {
   registerService,
   loginService,
   logoutService,
   updateSubscriptionService,
   updateAvatarService,
+  verifyEmailService,
+  resentVerifyEmailService,
 };
